@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block pageHeaderIntro %}
+    <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+        <h2 class="display-4 fw-normal">Latest news from around the world</h2>
+        <p class="fs-5 text-muted page-header-intro-text shrink-container">
+            Create a news parsing service from a news resource, for example hightload.today.
+            The service must have a page displaying the list of downloaded news and a CLI command
+            to start parsing.
+        </p>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <style>
+        .card img {
+            width: 100%;
+            height: 225px;
+            object-fit: cover;
+        }
+
+        .article-text {
+            font-size: 14px !important;
+            color: #000000 !important;
+        }
+
+        .read-more {
+            font-size: 13px !important;
+            color: darkmagenta;
+            font-family: PoppinsBold, Bahnschrift, sans-serif;
+            font-weight: bold;
+        }
+
+        .text-white {
+            color: #F6F6F6 !important;
+        }
+
+    </style>
+
+    <div class="container">
+        <div class="shrink-container">
+            {% if pagination.getTotalItemCount < 1 %}
+                <div class="alert bg-danger text-center" role="alert">
+                    <span class="text-white">No news articles found.</span>
+                </div>
+            {% else %}
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    {% for article in pagination %}
+                        <div class="col">
+                            <div class="card shadow-sm">
+                                <img src="{{ article.getPictureUrl() }}"
+                                     alt="{{ article.title }}"
+                                     onerror="this.src='./assets/images/blank-image-placeholder.jpg'"
+                                />
+
+                                <div class="card-body">
+                                    <div style="max-height: 120px; height: 120px">
+                                        <p class="card-text article-text">
+                                            {{ article.getShortDescription() }}
+                                            <a class="read-more" href="{{ article.getArticleUrl() }}">Read More</a>
+                                        </p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <button type="button" class="btn btn-sm icon-button">
+                                            <a href="{{ article.getArticleUrl() }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                     fill="#059862" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                                </svg>
+                                            </a>
+                                        </button>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <button type="button" class="btn btn-sm icon-button">
+                                                <a href="/news/d/{{ article.uuid }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="#BB0000" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                                    </svg>
+                                                </a>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="navigation-container">
+                    {{knp_pagination_render(pagination, '/pagination/twitter_bootstrap_v4_pagination.html.twig') }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

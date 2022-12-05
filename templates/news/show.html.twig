@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block pageHeaderIntro %}
+    <div class="pricing-header p-3 pb-md-4 mx-auto text-center shrink-container">
+        <h3 class="display-4 fw-normal header-bold">{{ article.title }}</h3>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="d-flex justify-content-end align-items-center mt-3">
+                <button type="button" class="btn btn-sm bg-danger ml-10">
+                    <a href="/news/d/{{ article.uuid }}" class="custom-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#CCCCCC"
+                             class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                        </svg>
+                        DELETE
+                    </a>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block body %}
+    <style>
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-container img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .article-text {
+            font-size: 14px !important;
+            color: #000000 !important;
+        }
+
+    </style>
+
+    <div class="container">
+        <div class="shrink-container row">
+            <div class="col-md-4 col-sm-12 col-lg-4">
+                <div class="image-container">
+                    <img src="{{ article.getPictureUrl() }}"
+                         alt="{{ article.title }}"
+                         onerror="this.src='./assets/images/blank-image-placeholder.jpg'"/>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-12 col-lg-8">
+                <p class="card-text article-text">{{ article.description }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
